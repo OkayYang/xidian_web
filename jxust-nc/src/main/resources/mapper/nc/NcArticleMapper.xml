@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcArticleMapper">
+    
+    <resultMap type="NcArticle" id="NcArticleResult">
+        <result property="articleId"    column="article_id"    />
+        <result property="articleTitle"    column="article_title"    />
+        <result property="articleContent"    column="article_content"    />
+        <result property="articleCover"    column="article_cover"    />
+        <result property="articleTypeId"    column="article_type_id"    />
+        <result property="articleStars"    column="article_stars"    />
+        <result property="articleLikes"    column="article_likes"    />
+        <result property="articleFlows"    column="article_flows"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="isCarousel"    column="isCarousel"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectNcArticleVo">
+        select article_id, article_title, article_content, article_cover, article_type_id, article_stars, article_likes, article_flows, create_time, create_by, isCarousel, status from nc_article
+    </sql>
+
+    <select id="selectNcArticleList" parameterType="NcArticle" resultMap="NcArticleResult">
+        <include refid="selectNcArticleVo"/>
+        <where>  
+            <if test="articleTitle != null  and articleTitle != ''"> and article_title = #{articleTitle}</if>
+            <if test="articleContent != null  and articleContent != ''"> and article_content = #{articleContent}</if>
+            <if test="articleTypeId != null "> and article_type_id = #{articleTypeId}</if>
+            <if test="isCarousel != null  and isCarousel != ''"> and isCarousel = #{isCarousel}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectNcArticleByArticleId" parameterType="Long" resultMap="NcArticleResult">
+        <include refid="selectNcArticleVo"/>
+        where article_id = #{articleId}
+    </select>
+        
+    <insert id="insertNcArticle" parameterType="NcArticle" useGeneratedKeys="true" keyProperty="articleId">
+        insert into nc_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="articleTitle != null and articleTitle != ''">article_title,</if>
+            <if test="articleContent != null">article_content,</if>
+            <if test="articleCover != null">article_cover,</if>
+            <if test="articleTypeId != null">article_type_id,</if>
+            <if test="articleStars != null">article_stars,</if>
+            <if test="articleLikes != null">article_likes,</if>
+            <if test="articleFlows != null">article_flows,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="isCarousel != null">isCarousel,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="articleTitle != null and articleTitle != ''">#{articleTitle},</if>
+            <if test="articleContent != null">#{articleContent},</if>
+            <if test="articleCover != null">#{articleCover},</if>
+            <if test="articleTypeId != null">#{articleTypeId},</if>
+            <if test="articleStars != null">#{articleStars},</if>
+            <if test="articleLikes != null">#{articleLikes},</if>
+            <if test="articleFlows != null">#{articleFlows},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="isCarousel != null">#{isCarousel},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNcArticle" parameterType="NcArticle">
+        update nc_article
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="articleTitle != null and articleTitle != ''">article_title = #{articleTitle},</if>
+            <if test="articleContent != null">article_content = #{articleContent},</if>
+            <if test="articleCover != null">article_cover = #{articleCover},</if>
+            <if test="articleTypeId != null">article_type_id = #{articleTypeId},</if>
+            <if test="articleStars != null">article_stars = #{articleStars},</if>
+            <if test="articleLikes != null">article_likes = #{articleLikes},</if>
+            <if test="articleFlows != null">article_flows = #{articleFlows},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="isCarousel != null">isCarousel = #{isCarousel},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where article_id = #{articleId}
+    </update>
+
+    <delete id="deleteNcArticleByArticleId" parameterType="Long">
+        delete from nc_article where article_id = #{articleId}
+    </delete>
+
+    <delete id="deleteNcArticleByArticleIds" parameterType="String">
+        delete from nc_article where article_id in 
+        <foreach item="articleId" collection="array" open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+    </delete>
+</mapper>

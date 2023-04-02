@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcDiscussMapper">
+
+    <resultMap type="WxNotice" id="WxNoticeResult">
+        <result property="discussId"    column="discuss_id"    />
+        <result property="discussContent"    column="discuss_content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="uid"    column="uid"    />
+        <result property="commentNick"    column="comment_nick"    />
+        <result property="commentName"    column="comment_name"    />
+        <result property="uImage"    column="u_image"    />
+        <result property="topicId"    column="topic_id"    />
+        <result property="topicContent"    column="topic_content"    />
+        <result property="topicImages"    column="topic_images"    />
+        <result property="topicFlows"    column="topic_flows"    />
+        <result property="topicUid"    column="topic_uid"    />
+        <result property="parentCommentId"    column="parent_comment_id"    />
+        <result property="parentCommentContent"    column="parent_comment_content"    />
+        <result property="parentCommentUid"    column="parent_comment_uid"    />
+        <result property="parentCommentNick"    column="parent_comment_nick"    />
+        <result property="parentCommentName"    column="parent_comment_name"    />
+    </resultMap>
+
+    <sql id="selectWxNoticeVo">
+        select discuss_id, discuss_content, create_time, uid, comment_nick, comment_name, u_image, topic_id, topic_content, topic_images, topic_flows, topic_uid, parent_comment_id, parent_comment_content, parent_comment_uid, parent_comment_nick, parent_comment_name from wx_notice
+    </sql>
+
+    <resultMap type="WxComment" id="WxCommentResult">
+        <result property="discussId"    column="discuss_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="discussContent"    column="discuss_content"    />
+        <result property="discussImages"    column="discuss_images"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="relateTopicId"    column="relate_id"    />
+        <result property="discussLikes"    column="discuss_likes"    />
+        <result property="uid"    column="uid"    />
+        <result property="uNick"    column="u_nick"    />
+        <result property="uName"    column="u_name"    />
+        <result property="uSex"    column="u_sex"    />
+        <result property="uImage"    column="u_image"    />
+        <result property="uType"    column="u_type"    />
+    </resultMap>
+
+    <sql id="selectWxCommentVo">
+        select discuss_id, parent_id, discuss_content, discuss_images, create_time, relate_id, discuss_likes, uid, u_nick, u_name, u_sex, u_image, u_type from wx_comment
+    </sql>
+    
+    <resultMap type="NcDiscuss" id="NcDiscussResult">
+        <result property="discussId"    column="discuss_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="discussContent"    column="discuss_content"    />
+        <result property="discussImages"    column="discuss_images"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="relateId"    column="relate_id"    />
+        <result property="createUid"    column="create_uid"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="discussLikes"    column="discuss_likes"    />
+        <result property="status"    column="status"    />
+
+    </resultMap>
+
+    <sql id="selectNcDiscussVo">
+        select discuss_id, parent_id, ancestors, discuss_content, discuss_images, create_time, relate_id, create_uid, discuss_likes,status from nc_discuss
+    </sql>
+
+    <select id="selectWxComments" parameterType="Long" resultMap="WxCommentResult">
+        <include refid="selectWxCommentVo"></include>
+        where relate_id = #{relateId}
+    </select>
+    <select id="selectWxCommentById" parameterType="Long" resultMap="WxCommentResult">
+        <include refid="selectWxCommentVo"></include>
+        where discuss_id= #{discussId}
+    </select>
+
+    <select id="selectWxNotice" parameterType="Long" resultMap="WxNoticeResult">
+        <include refid="selectWxNoticeVo"></include>
+        where topic_uid = #{uid} or parent_comment_uid = #{uid}
+        order by create_time desc
+
+    </select>
+
+    <select id="selectNcDiscussList" parameterType="NcDiscuss" resultMap="NcDiscussResult">
+        <include refid="selectNcDiscussVo"/>
+        <where>  
+            <if test="discussContent != null  and discussContent != ''"> and discuss_content = #{discussContent}</if>
+            <if test="relateId != null "> and relate_id = #{relateId}</if>
+            <if test="createUid != null "> and create_uid = #{createUid}</if>
+            <if test="discussLikes != null "> and discuss_likes = #{discussLikes}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectNcDiscussByDiscussId" parameterType="Long" resultMap="NcDiscussResult">
+        <include refid="selectNcDiscussVo"/>
+        where discuss_id = #{discussId}
+    </select>
+        
+    <insert id="insertNcDiscuss" parameterType="NcDiscuss" useGeneratedKeys="true" keyProperty="discussId">
+        insert into nc_discuss
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="discussContent != null">discuss_content,</if>
+            <if test="discussImages != null">discuss_images,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="relateId != null">relate_id,</if>
+            <if test="createUid != null">create_uid,</if>
+            <if test="discussLikes != null">discuss_likes,</if>
+            <if test="ancestors != null ">ancestors,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="discussContent != null">#{discussContent},</if>
+            <if test="discussImages != null">#{discussImages},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="relateId != null">#{relateId},</if>
+            <if test="createUid != null">#{createUid},</if>
+            <if test="discussLikes != null">#{discussLikes},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+    <update id="delWxCommentsById" parameterType="Long">
+        update nc_discuss set status='1' where CONCAT(',', ancestors, ',') LIKE '%,${commentId},%' or discuss_id =#{commentId} ;
+    </update>
+
+    <update id="updateNcDiscuss" parameterType="NcDiscuss">
+        update nc_discuss
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="discussContent != null">discuss_content = #{discussContent},</if>
+            <if test="discussImages != null">discuss_images = #{discussImages},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="relateId != null">relate_id = #{relateId},</if>
+            <if test="createUid != null">create_uid = #{createUid},</if>
+            <if test="discussLikes != null">discuss_likes = #{discussLikes},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where discuss_id = #{discussId}
+    </update>
+
+    <delete id="deleteNcDiscussByDiscussId" parameterType="Long">
+        delete from nc_discuss where discuss_id = #{discussId}
+    </delete>
+
+    <delete id="deleteNcDiscussByDiscussIds" parameterType="String">
+        delete from nc_discuss where discuss_id in 
+        <foreach item="discussId" collection="array" open="(" separator="," close=")">
+            #{discussId}
+        </foreach>
+    </delete>
+</mapper>

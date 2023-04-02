@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcUserMapper">
+    
+    <resultMap type="NcUser" id="NcUserResult">
+        <result property="uid"    column="uid"    />
+        <result property="uNick"    column="u_nick"    />
+        <result property="uName"    column="u_name"    />
+        <result property="uSex"    column="u_sex"    />
+        <result property="uXh"    column="u_xh"    />
+        <result property="uDesc"    column="u_desc"    />
+        <result property="uPassword"    column="u_password"    />
+        <result property="uDepartment"    column="u_department"    />
+        <result property="uMajor"    column="u_major"    />
+        <result property="uClassname"    column="u_className"    />
+        <result property="uQq"    column="u_qq"    />
+        <result property="uIdcard"    column="u_idcard"    />
+        <result property="uEmail"    column="u_email"    />
+        <result property="uImage"    column="u_image"    />
+        <result property="uType"    column="u_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="openid"    column="openid"    />
+    </resultMap>
+
+    <sql id="selectNcUserVo">
+        select uid, u_nick, u_name, u_sex, u_xh, u_desc, u_password, u_department, u_major, u_className, u_qq, u_idcard, u_email, u_image, u_type, create_time, status, openid from nc_user
+    </sql>
+
+    <select id="selectNcUserList" parameterType="NcUser" resultMap="NcUserResult">
+        <include refid="selectNcUserVo"/>
+        <where>  
+            <if test="uNick != null  and uNick != ''"> and u_nick = #{uNick}</if>
+            <if test="uName != null  and uName != ''"> and u_name like concat('%', #{uName}, '%')</if>
+            <if test="uXh != null "> and u_xh = #{uXh}</if>
+            <if test="uDepartment != null  and uDepartment != ''"> and u_department = #{uDepartment}</if>
+            <if test="uClassname != null  and uClassname != ''"> and u_className like concat('%', #{uClassname}, '%')</if>
+            <if test="uType != null  and uType != ''"> and u_type = #{uType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
+        </where>
+    </select>
+    
+    <select id="selectNcUserByUid" parameterType="Long" resultMap="NcUserResult">
+        <include refid="selectNcUserVo"/>
+        where uid = #{uid}
+    </select>
+        
+    <insert id="insertNcUser" parameterType="NcUser" useGeneratedKeys="true" keyProperty="uid">
+        insert into nc_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uNick != null">u_nick,</if>
+            <if test="uName != null">u_name,</if>
+            <if test="uSex != null">u_sex,</if>
+            <if test="uXh != null">u_xh,</if>
+            <if test="uDesc != null">u_desc,</if>
+            <if test="uPassword != null">u_password,</if>
+            <if test="uDepartment != null">u_department,</if>
+            <if test="uMajor != null">u_major,</if>
+            <if test="uClassname != null">u_className,</if>
+            <if test="uQq != null">u_qq,</if>
+            <if test="uIdcard != null">u_idcard,</if>
+            <if test="uEmail != null">u_email,</if>
+            <if test="uImage != null">u_image,</if>
+            <if test="uType != null">u_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="openid != null">openid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uNick != null">#{uNick},</if>
+            <if test="uName != null">#{uName},</if>
+            <if test="uSex != null">#{uSex},</if>
+            <if test="uXh != null">#{uXh},</if>
+            <if test="uDesc != null">#{uDesc},</if>
+            <if test="uPassword != null">#{uPassword},</if>
+            <if test="uDepartment != null">#{uDepartment},</if>
+            <if test="uMajor != null">#{uMajor},</if>
+            <if test="uClassname != null">#{uClassname},</if>
+            <if test="uQq != null">#{uQq},</if>
+            <if test="uIdcard != null">#{uIdcard},</if>
+            <if test="uEmail != null">#{uEmail},</if>
+            <if test="uImage != null">#{uImage},</if>
+            <if test="uType != null">#{uType},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="openid != null">#{openid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNcUser" parameterType="NcUser">
+        update nc_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uNick != null">u_nick = #{uNick},</if>
+            <if test="uName != null">u_name = #{uName},</if>
+            <if test="uSex != null">u_sex = #{uSex},</if>
+            <if test="uXh != null">u_xh = #{uXh},</if>
+            <if test="uDesc != null">u_desc = #{uDesc},</if>
+            <if test="uPassword != null">u_password = #{uPassword},</if>
+            <if test="uDepartment != null">u_department = #{uDepartment},</if>
+            <if test="uMajor != null">u_major = #{uMajor},</if>
+            <if test="uClassname != null">u_className = #{uClassname},</if>
+            <if test="uQq != null">u_qq = #{uQq},</if>
+            <if test="uIdcard != null">u_idcard = #{uIdcard},</if>
+            <if test="uEmail != null">u_email = #{uEmail},</if>
+            <if test="uImage != null">u_image = #{uImage},</if>
+            <if test="uType != null">u_type = #{uType},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="openid != null">openid = #{openid},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteNcUserByUid" parameterType="Long">
+        delete from nc_user where uid = #{uid}
+    </delete>
+
+    <delete id="deleteNcUserByUids" parameterType="String">
+        delete from nc_user where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+</mapper>

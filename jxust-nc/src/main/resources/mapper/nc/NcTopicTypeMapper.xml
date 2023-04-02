@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcTopicTypeMapper">
+    
+    <resultMap type="NcTopicType" id="NcTopicTypeResult">
+        <result property="ttId"    column="tt_id"    />
+        <result property="ttName"    column="tt_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="status"    column="status"    />
+        <result property="ttCover"    column="tt_cover"    />
+    </resultMap>
+
+    <sql id="selectNcTopicTypeVo">
+        select tt_id, tt_name, create_time, create_by, status, tt_cover from nc_topic_type
+    </sql>
+
+    <select id="selectNcTopicTypeList" parameterType="NcTopicType" resultMap="NcTopicTypeResult">
+        <include refid="selectNcTopicTypeVo"/>
+        <where>  
+            <if test="ttName != null  and ttName != ''"> and tt_name like concat('%', #{ttName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by create_time
+    </select>
+    
+    <select id="selectNcTopicTypeByTtId" parameterType="Long" resultMap="NcTopicTypeResult">
+        <include refid="selectNcTopicTypeVo"/>
+        where tt_id = #{ttId}
+    </select>
+        
+    <insert id="insertNcTopicType" parameterType="NcTopicType" useGeneratedKeys="true" keyProperty="ttId">
+        insert into nc_topic_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ttName != null and ttName != ''">tt_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="status != null">status,</if>
+            <if test="ttCover != null">tt_cover,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ttName != null and ttName != ''">#{ttName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="status != null">#{status},</if>
+            <if test="ttCover != null">#{ttCover},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNcTopicType" parameterType="NcTopicType">
+        update nc_topic_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ttName != null and ttName != ''">tt_name = #{ttName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="ttCover != null">tt_cover = #{ttCover},</if>
+        </trim>
+        where tt_id = #{ttId}
+    </update>
+
+    <delete id="deleteNcTopicTypeByTtId" parameterType="Long">
+        delete from nc_topic_type where tt_id = #{ttId}
+    </delete>
+
+    <delete id="deleteNcTopicTypeByTtIds" parameterType="String">
+        delete from nc_topic_type where tt_id in 
+        <foreach item="ttId" collection="array" open="(" separator="," close=")">
+            #{ttId}
+        </foreach>
+    </delete>
+</mapper>

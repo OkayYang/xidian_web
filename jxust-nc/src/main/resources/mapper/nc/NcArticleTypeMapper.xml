@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcArticleTypeMapper">
+    
+    <resultMap type="NcArticleType" id="NcArticleTypeResult">
+        <result property="atId"    column="at_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="atName"    column="at_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectNcArticleTypeVo">
+        select at_id, parent_id, at_name, create_time, create_by, status from nc_article_type
+    </sql>
+
+    <select id="selectNcArticleTypeList" parameterType="NcArticleType" resultMap="NcArticleTypeResult">
+        <include refid="selectNcArticleTypeVo"/>
+        <where>  
+            <if test="atName != null  and atName != ''"> and at_name like concat('%', #{atName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectNcArticleTypeByAtId" parameterType="Long" resultMap="NcArticleTypeResult">
+        <include refid="selectNcArticleTypeVo"/>
+        where at_id = #{atId}
+    </select>
+        
+    <insert id="insertNcArticleType" parameterType="NcArticleType" useGeneratedKeys="true" keyProperty="atId">
+        insert into nc_article_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="atName != null and atName != ''">at_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="atName != null and atName != ''">#{atName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNcArticleType" parameterType="NcArticleType">
+        update nc_article_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="atName != null and atName != ''">at_name = #{atName},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where at_id = #{atId}
+    </update>
+
+    <delete id="deleteNcArticleTypeByAtId" parameterType="Long">
+        delete from nc_article_type where at_id = #{atId}
+    </delete>
+
+    <delete id="deleteNcArticleTypeByAtIds" parameterType="String">
+        delete from nc_article_type where at_id in 
+        <foreach item="atId" collection="array" open="(" separator="," close=")">
+            #{atId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcTopicMapper">
+
+    <resultMap type="NcTopic" id="NcTopicResult">
+        <result property="topicId" column="topic_id"/>
+        <result property="topicTitle" column="topic_title"/>
+        <result property="topicContent" column="topic_content"/>
+        <result property="topicImages" column="topic_images"/>
+        <result property="topicVideos" column="topic_videos"/>
+        <result property="topicStars" column="topic_stars"/>
+        <result property="topicLikes" column="topic_likes"/>
+        <result property="topicFlows" column="topic_flows"/>
+        <result property="topicTypeId" column="topic_type_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUid" column="create_uid"/>
+        <result property="status" column="status"/>
+    </resultMap>
+    <resultMap type="WxTopic" id="WxTopicResult">
+        <result property="topicId" column="topic_id"/>
+        <result property="topicTitle" column="topic_title"/>
+        <result property="topicContent" column="topic_content"/>
+        <result property="topicImages" column="topic_images"/>
+        <result property="topicVideos" column="topic_videos"/>
+        <result property="topicStars" column="topic_stars"/>
+        <result property="topicLikes" column="topic_likes"/>
+        <result property="topicFlows" column="topic_flows"/>
+        <result property="topicTypeId" column="topic_type_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="uid" column="uid"/>
+        <result property="uNick" column="u_nick"/>
+        <result property="uName" column="u_name"/>
+        <result property="uImage" column="u_image"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="ttName" column="tt_name"/>
+    </resultMap>
+
+    <sql id="selectWxTopicVo">
+        select topic_id,
+               topic_title,
+               topic_content,
+               topic_images,
+               topic_videos,
+               topic_stars,
+               topic_likes,
+               topic_flows,
+               topic_type_id,
+               create_time,
+               uid,
+               u_nick,
+               u_name,
+               u_image,
+               comment_count,
+               tt_name
+        from wx_topic
+    </sql>
+
+
+    <sql id="selectNcTopicVo">
+        select topic_id,
+               topic_title,
+               topic_content,
+               topic_images,
+               topic_videos,
+               topic_stars,
+               topic_likes,
+               topic_flows,
+               topic_type_id,
+               create_time,
+               create_uid,
+               status
+        from nc_topic
+    </sql>
+    <select id="selectWxTopicList" parameterType="WxTopic" resultMap="WxTopicResult">
+        <include refid="selectWxTopicVo"/>
+        <where>
+
+            <if test="topicTypeId != null ">and topic_type_id = #{topicTypeId}</if>
+            <if test="uid != null ">and uid = #{uid}</if>
+        </where>
+        order by create_time desc
+
+    </select>
+    <select id="selectWxTopicByTopicId" parameterType="Long" resultMap="WxTopicResult">
+        <include refid="selectWxTopicVo"/>
+        where topic_id=#{tid}
+
+    </select>
+
+
+
+    <select id="selectNcTopicList" parameterType="NcTopic" resultMap="NcTopicResult">
+        <include refid="selectNcTopicVo"/>
+        <where>
+            <if test="topicContent != null  and topicContent != ''">and topic_content = #{topicContent}</if>
+            <if test="topicTypeId != null ">and topic_type_id = #{topicTypeId}</if>
+            <if test="createUid != null ">and create_uid = #{createUid}</if>
+            <if test="status != null  and status != ''">and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectNcTopicByTopicId" parameterType="Long" resultMap="NcTopicResult">
+        <include refid="selectNcTopicVo"/>
+        where topic_id = #{topicId}
+    </select>
+
+    <insert id="insertNcTopic" parameterType="NcTopic" useGeneratedKeys="true" keyProperty="topicId">
+        insert into nc_topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="topicTitle != null">topic_title,</if>
+            <if test="topicContent != null">topic_content,</if>
+            <if test="topicImages != null">topic_images,</if>
+            <if test="topicVideos != null">topic_videos,</if>
+            <if test="topicStars != null">topic_stars,</if>
+            <if test="topicLikes != null">topic_likes,</if>
+            <if test="topicFlows != null">topic_flows,</if>
+            <if test="topicTypeId != null">topic_type_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createUid != null">create_uid,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="topicTitle != null">#{topicTitle},</if>
+            <if test="topicContent != null">#{topicContent},</if>
+            <if test="topicImages != null">#{topicImages},</if>
+            <if test="topicVideos != null">#{topicVideos},</if>
+            <if test="topicStars != null">#{topicStars},</if>
+            <if test="topicLikes != null">#{topicLikes},</if>
+            <if test="topicFlows != null">#{topicFlows},</if>
+            <if test="topicTypeId != null">#{topicTypeId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createUid != null">#{createUid},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNcTopic" parameterType="NcTopic">
+        update nc_topic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="topicTitle != null">topic_title = #{topicTitle},</if>
+            <if test="topicContent != null">topic_content = #{topicContent},</if>
+            <if test="topicImages != null">topic_images = #{topicImages},</if>
+            <if test="topicVideos != null">topic_videos = #{topicVideos},</if>
+            <if test="topicStars != null">topic_stars = #{topicStars},</if>
+            <if test="topicLikes != null">topic_likes = #{topicLikes},</if>
+            <if test="topicFlows != null">topic_flows = #{topicFlows},</if>
+            <if test="topicTypeId != null">topic_type_id = #{topicTypeId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createUid != null">create_uid = #{createUid},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        <where>
+            topic_id = #{topicId}
+            <if test="createUid != null ">and create_uid = #{createUid}</if>
+        </where>
+
+    </update>
+    <update id="updateFlows" parameterType="Long">
+        update  nc_topic set topic_flows=topic_flows+1 where topic_id=#{topicId}
+    </update>
+
+    <delete id="deleteNcTopicByTopicId" parameterType="Long">
+        delete
+        from nc_topic
+        where topic_id = #{topicId}
+    </delete>
+
+    <delete id="deleteNcTopicByTopicIds" parameterType="String">
+        delete from nc_topic where topic_id in
+        <foreach item="topicId" collection="array" open="(" separator="," close=")">
+            #{topicId}
+        </foreach>
+    </delete>
+</mapper>
