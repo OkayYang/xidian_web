@@ -3,6 +3,7 @@ package com.jxust.web.controller.nc.wx;
 
 import com.jxust.common.annotation.RepeatSubmit;
 import com.jxust.common.core.domain.AjaxResult;
+import com.jxust.common.utils.ServletUtils;
 import com.jxust.nc.domain.NcUser;
 import com.jxust.nc.domain.WxLoginUser;
 import com.jxust.nc.domain.WxUser;
@@ -29,6 +30,25 @@ public class WxUserController {
     private INcUserService ncUserService;
     @Autowired
     private ITencentService tencentService;
+
+    @PostMapping("/edit")
+    public AjaxResult editUser(@RequestBody NcUser ncUser){
+        String token = ServletUtils.getRequest().getHeader("token");
+        if (token!=null){
+            Long uid = JwtUtils.getUid(token);
+            if (uid!=null){
+                ncUser.setUid(uid);
+                int result = ncUserService.updateNcUser(ncUser);
+                if (result==1){
+                    return success("修改成功");
+                }else {
+                    error("修改失败");
+                }
+            }
+
+        }
+        return error("非法请求!");
+    }
     @PostMapping("/login")
     @RepeatSubmit(interval = 500, message = "请求过于频繁")
     public AjaxResult checkLogin(@RequestBody WxLoginUser wxUserModel) throws Exception {

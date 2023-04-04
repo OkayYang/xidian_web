@@ -93,4 +93,12 @@ public class NcArticleServiceImpl implements INcArticleService
     {
         return ncArticleMapper.deleteNcArticleByArticleId(articleId);
     }
+
+    /**
+     * 更新浏览量
+     */
+
+    public int updateFlows(Long articleId){
+        return ncArticleMapper.updateFlows(articleId);
+    }
 }

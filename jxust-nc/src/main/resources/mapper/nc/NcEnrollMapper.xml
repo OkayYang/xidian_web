@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcEnrollMapper">
+
+    <resultMap type="ViewEnroll" id="ViewEnrollResult">
+        <result property="enrollId"    column="enroll_id"    />
+        <result property="contestId"    column="contest_id"    />
+        <result property="contestName"    column="contest_name"    />
+        <result property="uid"    column="uid"    />
+        <result property="uNick"    column="u_nick"    />
+        <result property="uName"    column="u_name"    />
+        <result property="uSex"    column="u_sex"    />
+        <result property="uXh"    column="u_xh"    />
+        <result property="uDepartment"    column="u_department"    />
+        <result property="uMajor"    column="u_major"    />
+        <result property="uClassname"    column="u_className"    />
+        <result property="uImage"    column="u_image"    />
+        <result property="uType"    column="u_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="Auditor"    column="Auditor"    />
+    </resultMap>
+
+    <sql id="selectViewEnrollVo">
+        select enroll_id, contest_id, contest_name, uid, u_nick, u_name, u_sex, u_xh, u_department, u_major, u_className, u_image, u_type, create_time, status, Auditor from view_enroll
+    </sql>
+    
+    <resultMap type="NcEnroll" id="NcEnrollResult">
+        <result property="enrollId"    column="enroll_id"    />
+        <result property="enrollUid"    column="enroll_uid"    />
+        <result property="enrollCid"    column="enroll_cid"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="status"    column="status"    />
+        <result property="Auditor"    column="Auditor"    />
+    </resultMap>
+
+    <resultMap id="NcEnrollNcUserResult" type="NcEnroll" extends="NcEnrollResult">
+        <collection property="ncUserList" notNullColumn="sub_uid" javaType="java.util.List" resultMap="NcUserResult" />
+    </resultMap>
+
+    <resultMap type="NcUser" id="NcUserResult">
+        <result property="uid"    column="sub_uid"    />
+        <result property="uNick"    column="sub_u_nick"    />
+        <result property="uName"    column="sub_u_name"    />
+        <result property="uSex"    column="sub_u_sex"    />
+        <result property="uXh"    column="sub_u_xh"    />
+        <result property="uDesc"    column="sub_u_desc"    />
+        <result property="uPassword"    column="sub_u_password"    />
+        <result property="uDepartment"    column="sub_u_department"    />
+        <result property="uMajor"    column="sub_u_major"    />
+        <result property="uClassname"    column="sub_u_className"    />
+        <result property="uQq"    column="sub_u_qq"    />
+        <result property="uIdcard"    column="sub_u_idcard"    />
+        <result property="uEmail"    column="sub_u_email"    />
+        <result property="uImage"    column="sub_u_image"    />
+        <result property="uType"    column="sub_u_type"    />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="status"    column="sub_status"    />
+        <result property="openid"    column="sub_openid"    />
+    </resultMap>
+
+    <sql id="selectNcEnrollVo">
+        select enroll_id, enroll_uid, enroll_cid, create_time, status, Auditor from nc_enroll
+    </sql>
+
+    <select id="selectViewEnrollList" parameterType="ViewEnroll" resultMap="ViewEnrollResult">
+        <include refid="selectViewEnrollVo"/>
+        <where>
+            <if test="contestName != null  and contestName != ''"> and contest_name like concat('%', #{contestName}, '%')</if>
+            <if test="uNick != null  and uNick != ''"> and u_nick = #{uNick}</if>
+            <if test="uName != null  and uName != ''"> and u_name like concat('%', #{uName}, '%')</if>
+            <if test="uXh != null "> and u_xh = #{uXh}</if>
+            <if test="uDepartment != null  and uDepartment != ''"> and u_department = #{uDepartment}</if>
+            <if test="uMajor != null  and uMajor != ''"> and u_major like concat('%', #{uMajor}, '%')</if>
+            <if test="uClassname != null  and uClassname != ''"> and u_className like concat('%', #{uClassname}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectViewEnrollByEnrollId" parameterType="Long" resultMap="ViewEnrollResult">
+        <include refid="selectViewEnrollVo"/>
+        where enroll_id = #{enrollId}
+    </select>
+
+    <select id="selectNcEnrollList" parameterType="NcEnroll" resultMap="NcEnrollResult">
+        <include refid="selectNcEnrollVo"/>
+        <where>  
+            <if test="enrollUid != null "> and enroll_uid = #{enrollUid}</if>
+            <if test="enrollCid != null "> and enroll_cid = #{enrollCid}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="Auditor != null  and Auditor != ''"> and Auditor = #{Auditor}</if>
+        </where>
+    </select>
+    
+    <select id="selectNcEnrollByEnrollId" parameterType="Long" resultMap="NcEnrollNcUserResult">
+        select a.enroll_id, a.enroll_uid, a.enroll_cid, a.create_time, a.status, a.Auditor,
+ b.uid as sub_uid, b.u_nick as sub_u_nick, b.u_name as sub_u_name, b.u_sex as sub_u_sex, b.u_xh as sub_u_xh, b.u_desc as sub_u_desc, b.u_password as sub_u_password, b.u_department as sub_u_department, b.u_major as sub_u_major, b.u_className as sub_u_className, b.u_qq as sub_u_qq, b.u_idcard as sub_u_idcard, b.u_email as sub_u_email, b.u_image as sub_u_image, b.u_type as sub_u_type, b.create_time as sub_create_time, b.status as sub_status, b.openid as sub_openid
+        from nc_enroll a
+        left join nc_user b on b.uid = a.enroll_id
+        where a.enroll_id = #{enrollId}
+    </select>
+        
+    <insert id="insertNcEnroll" parameterType="NcEnroll" useGeneratedKeys="true" keyProperty="enrollId">
+        insert into nc_enroll
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="enrollUid != null">enroll_uid,</if>
+            <if test="enrollCid != null">enroll_cid,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="status != null">status,</if>
+            <if test="Auditor != null">Auditor,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="enrollUid != null">#{enrollUid},</if>
+            <if test="enrollCid != null">#{enrollCid},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="Auditor != null">#{Auditor},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNcEnroll" parameterType="NcEnroll">
+        update nc_enroll
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enrollUid != null">enroll_uid = #{enrollUid},</if>
+            <if test="enrollCid != null">enroll_cid = #{enrollCid},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="Auditor != null">Auditor = #{Auditor},</if>
+        </trim>
+        where enroll_id = #{enrollId}
+    </update>
+
+    <delete id="deleteNcEnrollByEnrollId" parameterType="Long">
+        delete from nc_enroll where enroll_id = #{enrollId}
+    </delete>
+
+    <delete id="deleteNcEnrollByEnrollIds" parameterType="String">
+        delete from nc_enroll where enroll_id in 
+        <foreach item="enrollId" collection="array" open="(" separator="," close=")">
+            #{enrollId}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteNcUserByUids" parameterType="String">
+        delete from nc_user where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteNcUserByUid" parameterType="Long">
+        delete from nc_user where uid = #{uid}
+    </delete>
+
+    <insert id="batchNcUser">
+        insert into nc_user( uid, u_nick, u_name, u_sex, u_xh, u_desc, u_password, u_department, u_major, u_className, u_qq, u_idcard, u_email, u_image, u_type, create_time, status, openid) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.uid}, #{item.uNick}, #{item.uName}, #{item.uSex}, #{item.uXh}, #{item.uDesc}, #{item.uPassword}, #{item.uDepartment}, #{item.uMajor}, #{item.uClassname}, #{item.uQq}, #{item.uIdcard}, #{item.uEmail}, #{item.uImage}, #{item.uType}, #{item.createTime}, #{item.status}, #{item.openid})
+        </foreach>
+    </insert>
+</mapper>

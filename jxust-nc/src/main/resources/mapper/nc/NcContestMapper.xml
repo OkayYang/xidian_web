@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcContestMapper">
+    
+    <resultMap type="NcContest" id="NcContestResult">
+        <result property="contestId"    column="contest_id"    />
+        <result property="contestName"    column="contest_name"    />
+        <result property="contestCover"    column="contest_cover"    />
+        <result property="contestDesc"    column="contest_desc"    />
+        <result property="contestTime"    column="contest_time" javaType="java.lang.String" typeHandler="com.jxust.nc.utils.MyArrayTypeHandler"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="contestFlows"    column="contest_flows"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectNcContestVo">
+        select contest_id, contest_name, contest_cover, contest_desc, contest_time, create_time, create_by,contest_flows, status from nc_contest
+    </sql>
+
+    <select id="selectNcContestList" parameterType="NcContest" resultMap="NcContestResult">
+        <include refid="selectNcContestVo"/>
+        <where>  
+            <if test="contestName != null  and contestName != ''"> and contest_name like concat('%', #{contestName}, '%')</if>
+            <if test="contestTime != null  and contestTime != ''"> and contest_time = #{contestTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectNcContestByContestId" parameterType="Long" resultMap="NcContestResult">
+        <include refid="selectNcContestVo"/>
+        where contest_id = #{contestId}
+    </select>
+        
+    <insert id="insertNcContest" parameterType="NcContest" useGeneratedKeys="true" keyProperty="contestId">
+        insert into nc_contest
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contestName != null">contest_name,</if>
+            <if test="contestCover != null">contest_cover,</if>
+            <if test="contestDesc != null">contest_desc,</if>
+            <if test="contestTime != null">contest_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contestName != null">#{contestName},</if>
+            <if test="contestCover != null">#{contestCover},</if>
+            <if test="contestDesc != null">#{contestDesc},</if>
+            <if test="contestTime != null">#{contestTime, typeHandler=com.jxust.nc.utils.MyArrayTypeHandler},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNcContest" parameterType="NcContest">
+        update nc_contest
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contestName != null">contest_name = #{contestName},</if>
+            <if test="contestCover != null">contest_cover = #{contestCover},</if>
+            <if test="contestDesc != null">contest_desc = #{contestDesc},</if>
+            <if test="contestTime != null">contest_time = #{contestTime, typeHandler=com.jxust.nc.utils.MyArrayTypeHandler},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where contest_id = #{contestId}
+    </update>
+    <update id="updateFlows" parameterType="Long">
+        update nc_contest set contest_flows = contest_flows+1 where contest_id = #{contestId}
+    </update>
+
+    <delete id="deleteNcContestByContestId" parameterType="Long">
+        delete from nc_contest where contest_id = #{contestId}
+    </delete>
+
+    <delete id="deleteNcContestByContestIds" parameterType="String">
+        delete from nc_contest where contest_id in 
+        <foreach item="contestId" collection="array" open="(" separator="," close=")">
+            #{contestId}
+        </foreach>
+    </delete>
+</mapper>

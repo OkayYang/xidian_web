@@ -77,7 +77,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectWxNotice" parameterType="Long" resultMap="WxNoticeResult">
         <include refid="selectWxNoticeVo"></include>
-        where topic_uid = #{uid} or parent_comment_uid = #{uid}
+        where (topic_uid = #{uid} OR parent_comment_uid = #{uid})
+        AND (uid != #{uid} OR (topic_uid = #{uid} AND parent_comment_uid IS NULL))
         order by create_time desc
 
     </select>

@@ -1,24 +1,22 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="文章标题" prop="articleTitle">
+      <el-form-item label="标题" prop="contestName">
         <el-input
-          v-model="queryParams.articleTitle"
-          placeholder="请输入文章标题"
+          v-model="queryParams.contestName"
+          placeholder="请输入标题"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="轮播展示" prop="isCarousel">
-        <el-select v-model="queryParams.isCarousel" placeholder="请选择轮播展示" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_yes_no"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
+<!--      <el-form-item label="比赛时间" prop="contestTime">-->
+<!--        <el-input-->
+<!--          v-model="queryParams.contestTime"-->
+<!--          placeholder="请输入比赛时间"-->
+<!--          clearable-->
+<!--          @keyup.enter.native="handleQuery"-->
+<!--        />-->
+<!--      </el-form-item>-->
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择状态" clearable>
           <el-option
@@ -43,7 +41,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['nc:article:add']"
+          v-hasPermi="['nc:contest:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -54,7 +52,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['nc:article:edit']"
+          v-hasPermi="['nc:contest:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -65,7 +63,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['nc:article:remove']"
+          v-hasPermi="['nc:contest:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -75,36 +73,22 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['nc:article:export']"
+          v-hasPermi="['nc:contest:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="articleList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="contestList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="文章ID" align="center" prop="articleId" />
-      <el-table-column label="文章标题" align="center" prop="articleTitle" />
-      <el-table-column label="封面" align="center" prop="articleCover" width="100">
+      <el-table-column label="比赛ID" align="center" prop="contestId" />
+      <el-table-column label="标题" align="center" prop="contestName" />
+      <el-table-column label="封面" align="center" prop="contestCover" width="100">
         <template slot-scope="scope">
-          <image-preview :src="scope.row.articleCover" :width="50" :height="50"/>
+          <image-preview :src="scope.row.contestCover" :width="50" :height="50"/>
         </template>
       </el-table-column>
-<!--      <el-table-column label="类型" align="center" prop="articleTypeId" />-->
-      <el-table-column label="收藏量" align="center" prop="articleStars" />
-      <el-table-column label="喜欢量" align="center" prop="articleLikes" />
-      <el-table-column label="浏览量" align="center" prop="articleFlows" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建者" align="center" prop="createBy" />
-      <el-table-column label="轮播展示" align="center" prop="isCarousel">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isCarousel"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="比赛时间" align="center" prop="contestTime" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_common_status" :value="scope.row.status"/>
@@ -117,14 +101,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['nc:article:edit']"
+            v-hasPermi="['nc:contest:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['nc:article:remove']"
+            v-hasPermi="['nc:contest:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -138,41 +122,22 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改文章管理对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  width="800px" append-to-body>
+    <!-- 添加或修改发布比赛对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="文章标题" prop="articleTitle">
-          <el-input v-model="form.articleTitle" placeholder="请输入文章标题" />
+        <el-form-item label="标题" prop="contestName">
+          <el-input v-model="form.contestName" placeholder="请输入标题" />
         </el-form-item>
-        <el-form-item label="文章内容">
-          <editor v-model="form.articleContent" :min-height="192"/>
+        <el-form-item label="封面" prop="contestCover">
+          <image-upload v-model="form.contestCover"/>
         </el-form-item>
-        <el-form-item label="封面" prop="articleCover">
-          <image-upload limit="1" v-model="form.articleCover"/>
+        <el-form-item label="描述">
+          <editor v-model="form.contestDesc" :min-height="192"/>
         </el-form-item>
-          <el-form-item label="文章类别" prop="articleTypeId">
-            <el-select v-model="form.articleTypeId" placeholder="请选择文章类别" clearable :style="{width: '100%'}">
-              <el-option v-for="(item, index) in articleOptions" :key="index" :label="item.label"
-                         :value="item.value" :disabled="item.disabled"></el-option>
-            </el-select>
-          </el-form-item>
-        <el-form-item label="收藏量" prop="articleStars">
-          <el-input v-model="form.articleStars" placeholder="请输入收藏量" />
-        </el-form-item>
-        <el-form-item label="喜欢量" prop="articleLikes">
-          <el-input v-model="form.articleLikes" placeholder="请输入喜欢量" />
-        </el-form-item>
-        <el-form-item label="浏览量" prop="articleFlows">
-          <el-input v-model="form.articleFlows" placeholder="请输入浏览量" />
-        </el-form-item>
-        <el-form-item label="轮播展示" prop="isCarousel">
-          <el-radio-group v-model="form.isCarousel">
-            <el-radio
-              v-for="dict in dict.type.sys_yes_no"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
-          </el-radio-group>
+        <el-form-item label="比赛时间" prop="contestTime">
+          <el-date-picker type="datetimerange" v-model="form.contestTime" format="yyyy-MM-dd"
+                          value-format="yyyy-MM-dd " :style="{width: '100%'}" start-placeholder="开始日期"
+                          end-placeholder="结束日期" range-separator="至" clearable></el-date-picker>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -193,18 +158,11 @@
 </template>
 
 <script>
-import { listArticle, getArticle, delArticle, addArticle, updateArticle } from "@/api/nc/article";
-import { listType} from "@/api/nc/type";
-import article from "@/views/nc/article/index.vue";
+import { listContest, getContest, delContest, addContest, updateContest } from "@/api/nc/contest";
 
 export default {
-  name: "Article",
-  computed: {
-    article() {
-      return article
-    }
-  },
-  dicts: ['sys_common_status', 'sys_yes_no'],
+  name: "Contest",
+  dicts: ['sys_common_status'],
   data() {
     return {
       // 遮罩层
@@ -219,9 +177,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 文章管理表格数据
-      articleList: [],
-      articleOptions:[],
+      // 发布比赛表格数据
+      contestList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -230,51 +187,26 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        articleTitle: null,
-        articleContent: null,
-        articleTypeId: null,
-        isCarousel: null,
+        contestName: null,
+        contestTime: null,
         status: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        articleTitle: [
-          { required: true, message: "文章标题不能为空", trigger: "blur" }
-        ],
-        articleTypeId: [
-          { required: true, message: "类型不能为空", trigger: "change" }
-        ],
       }
     };
   },
   created() {
     this.getList();
-    this.getTypeList();
   },
   methods: {
-    getTypeList(){
-      let list = [];
-      listType({}).then(response => {
-        for (let i = 0; i < response.rows.length; i++) {
-          console.log(response.rows[i])
-          list.push({
-            "label": response.rows[i].atName,
-            "value": response.rows[i].atId
-          })
-        }
-
-        this.articleOptions=list
-
-      });
-
-    },
-    /** 查询文章管理列表 */
+    /** 查询发布比赛列表 */
     getList() {
       this.loading = true;
-      listArticle(this.queryParams).then(response => {
-        this.articleList = response.rows;
+      listContest(this.queryParams).then(response => {
+        this.contestList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -287,17 +219,13 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        articleId: null,
-        articleTitle: null,
-        articleContent: null,
-        articleCover: null,
-        articleTypeId: null,
-        articleStars: null,
-        articleLikes: null,
-        articleFlows: null,
+        contestId: null,
+        contestName: null,
+        contestCover: null,
+        contestDesc: null,
+        contestTime: null,
         createTime: null,
         createBy: null,
-        isCarousel: null,
         status: null
       };
       this.resetForm("form");
@@ -314,7 +242,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.articleId)
+      this.ids = selection.map(item => item.contestId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -322,30 +250,30 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加文章管理";
+      this.title = "添加发布比赛";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const articleId = row.articleId || this.ids
-      getArticle(articleId).then(response => {
+      const contestId = row.contestId || this.ids
+      getContest(contestId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改文章管理";
+        this.title = "修改发布比赛";
       });
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.articleId != null) {
-            updateArticle(this.form).then(response => {
+          if (this.form.contestId != null) {
+            updateContest(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addArticle(this.form).then(response => {
+            addContest(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -356,9 +284,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const articleIds = row.articleId || this.ids;
-      this.$modal.confirm('是否确认删除文章管理编号为"' + articleIds + '"的数据项？').then(function() {
-        return delArticle(articleIds);
+      const contestIds = row.contestId || this.ids;
+      this.$modal.confirm('是否确认删除发布比赛编号为"' + contestIds + '"的数据项？').then(function() {
+        return delContest(contestIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -366,9 +294,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('nc/article/export', {
+      this.download('nc/contest/export', {
         ...this.queryParams
-      }, `article_${new Date().getTime()}.xlsx`)
+      }, `contest_${new Date().getTime()}.xlsx`)
     }
   }
 };

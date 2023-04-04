@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isCarousel != null  and isCarousel != ''"> and isCarousel = #{isCarousel}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by create_time desc
     </select>
     
     <select id="selectNcArticleByArticleId" parameterType="Long" resultMap="NcArticleResult">
@@ -68,6 +69,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">#{status},</if>
          </trim>
     </insert>
+
+    <update id="updateFlows" parameterType="Long">
+        update  nc_article set article_flows=article_flows+1 where article_id = #{articleId}
+    </update>
+
 
     <update id="updateNcArticle" parameterType="NcArticle">
         update nc_article

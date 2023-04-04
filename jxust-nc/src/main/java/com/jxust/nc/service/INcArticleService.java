@@ -58,4 +58,9 @@ public interface INcArticleService
      * @return 结果
      */
     public int deleteNcArticleByArticleId(Long articleId);
+    /**
+     * 更新浏览量
+     */
+
+    public int updateFlows(Long articleId);
 }

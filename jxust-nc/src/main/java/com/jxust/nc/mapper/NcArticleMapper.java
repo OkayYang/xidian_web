@@ -58,4 +58,10 @@ public interface NcArticleMapper
      * @return 结果
      */
     public int deleteNcArticleByArticleIds(Long[] articleIds);
+
+    /**
+     * 更新浏览量
+     */
+
+    public int updateFlows(Long articleId);
 }

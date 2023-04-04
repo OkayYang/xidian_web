@@ -48,7 +48,13 @@ public class WxTopicController extends BaseController {
             ncTopic.setTopicImages(images);
             ncTopic.setTopicTypeId((long)typeId);
             ncTopic.setCreateUid(uid);
-            return toAjax(ncTopicService.insertNcTopic(ncTopic));
+            int result = ncTopicService.insertNcTopic(ncTopic);
+            if(result==1){
+                return success("发布成功");
+            }else {
+                return error("发布失败");
+            }
+
 
         }
         return error("非法请求!");
@@ -102,7 +108,14 @@ public class WxTopicController extends BaseController {
             ncTopic.setTopicId(tid);
             ncTopic.setCreateUid(JwtUtils.getUid(token));
 
-            return success(ncTopicService.updateNcTopic(ncTopic));
+            int result = ncTopicService.updateNcTopic(ncTopic);
+            if(result==1){
+                return success("删除成功");
+            }else {
+                return error("删除失败");
+            }
+
+
 
         }
         return error("非法请求!");
@@ -140,7 +153,14 @@ public class WxTopicController extends BaseController {
 
             Long uid = JwtUtils.getUid(token);
             ncDiscuss.setCreateUid(uid);
-            return toAjax(ncDiscussService.insertNcDiscuss(ncDiscuss));
+
+            int result = ncDiscussService.insertNcDiscuss(ncDiscuss);
+            if(result==1){
+                return success("评论成功");
+            }else {
+                return error("评论失败");
+            }
+
 
         }
         return error("非法请求!");
@@ -153,7 +173,14 @@ public class WxTopicController extends BaseController {
             //展示不做处理用户非法删帖
             Long uid = JwtUtils.getUid(token);
             if (uid!=null){
-                return toAjax(ncDiscussService.delWxCommentsById(did));
+
+                int result = ncDiscussService.delWxCommentsById(did);
+                if(result==1){
+                    return success("删除成功");
+                }else {
+                    return error("删除失败");
+                }
+
 
             }
 

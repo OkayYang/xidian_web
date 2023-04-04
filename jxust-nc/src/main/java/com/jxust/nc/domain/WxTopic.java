@@ -70,11 +70,21 @@ public class WxTopic extends BaseEntity
 
     private String uImage;
 
+    private String uType;
+
     /** 评论数量 */
 
     private Long commentCount;
 
     private String ttName;
+
+    public String getuType() {
+        return uType;
+    }
+
+    public void setuType(String uType) {
+        this.uType = uType;
+    }
 
     public String getTtName() {
         return ttName;

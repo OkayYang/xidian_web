@@ -65,12 +65,10 @@ public class WxArticleController extends BaseController {
     @GetMapping("/detail")
     public AjaxResult getArticleById(@RequestParam("id") Long id){
 
+        ncArticleService.updateFlows(id);
+
         return success(ncArticleService.selectNcArticleByArticleId(id));
     }
-    @GetMapping("/bisai")
-    public AjaxResult getBisaiList(){
 
-        return success();
-    }
 
 }

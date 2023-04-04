@@ -33,6 +33,7 @@
         <result property="uNick" column="u_nick"/>
         <result property="uName" column="u_name"/>
         <result property="uImage" column="u_image"/>
+        <result property="uType" column="u_type"/>
         <result property="commentCount" column="comment_count"/>
         <result property="ttName" column="tt_name"/>
     </resultMap>
@@ -52,6 +53,7 @@
                u_nick,
                u_name,
                u_image,
+               u_type,
                comment_count,
                tt_name
         from wx_topic
