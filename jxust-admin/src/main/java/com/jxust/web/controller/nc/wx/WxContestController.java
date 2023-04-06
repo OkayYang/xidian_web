@@ -85,10 +85,31 @@ public class WxContestController extends BaseController {
 
     @GetMapping("/detail")
     public AjaxResult getArticleById(@RequestParam("cid") Long cid){
-
         ncContestService.updateFlows(cid);
+        NcContest ncContest = ncContestService.selectNcContestByContestId(cid);
+        List<NcEnroll> ncEnrolls = new ArrayList<>();
+        String token = ServletUtils.getRequest().getHeader("token");
+        if (token!=null){
+            Long uid = JwtUtils.getUid(token);
+            if (uid!=null){
+                NcEnroll ncEnroll = new NcEnroll();
+                ncEnroll.setStatus("0");
+                ncEnroll.setEnrollUid(uid);
+                ncEnrolls = ncEnrollService.selectNcEnrollList(ncEnroll);
 
-        return success(ncContestService.selectNcContestByContestId(cid));
+            }
+        }
+
+        for (NcEnroll enroll:ncEnrolls
+        ) {
+
+            if (Objects.equals(enroll.getEnrollCid(), ncContest.getContestId())){
+                ncContest.setStatus("1");
+            }
+
+        }
+
+        return success(ncContest);
     }
 
     @GetMapping("/enroll/add")

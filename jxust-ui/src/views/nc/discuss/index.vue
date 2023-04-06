@@ -73,6 +73,11 @@
       </el-table-column>
       <el-table-column label="关联文章id" align="center" prop="relateId" />
       <el-table-column label="评论者id" align="center" prop="createUid" />
+      <el-table-column label="评论时间" align="center" prop="createTime" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="评论赞" align="center" prop="discussLikes" />
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">

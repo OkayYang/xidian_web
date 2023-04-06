@@ -39,7 +39,15 @@ public class NcContest extends BaseEntity
     @Excel(name = "状态")
     private String status;
 
-    public void setContestId(Long contestId) 
+    public int getContestFlows() {
+        return contestFlows;
+    }
+
+    public void setContestFlows(int contestFlows) {
+        this.contestFlows = contestFlows;
+    }
+
+    public void setContestId(Long contestId)
     {
         this.contestId = contestId;
     }

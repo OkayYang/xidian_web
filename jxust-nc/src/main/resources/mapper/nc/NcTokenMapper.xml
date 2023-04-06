@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxust.nc.mapper.NcTokenMapper">
+
+    <resultMap type="NcToken" id="NcTokenResult">
+        <result property="tokenId"    column="token_id"    />
+        <result property="tokenName"    column="token_name"    />
+        <result property="tokenValue"    column="token_value"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectNcTokenVo">
+        select token_id, token_name, token_value, create_time, update_time, status from nc_token
+    </sql>
+
+    <select id="selectNcTokenList" parameterType="NcToken" resultMap="NcTokenResult">
+        <include refid="selectNcTokenVo"/>
+        <where>
+            <if test="tokenName != null  and tokenName != ''"> and token_name like concat('%', #{tokenName}, '%')</if>
+            <if test="tokenValue != null  and tokenValue != ''"> and token_value = #{tokenValue}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectNcTokenByTokenId" parameterType="Long" resultMap="NcTokenResult">
+        <include refid="selectNcTokenVo"/>
+        where token_id = #{tokenId}
+    </select>
+
+    <insert id="insertNcToken" parameterType="NcToken" useGeneratedKeys="true" keyProperty="tokenId">
+        insert into nc_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tokenName != null">token_name,</if>
+            <if test="tokenValue != null">token_value,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tokenName != null">#{tokenName},</if>
+            <if test="tokenValue != null">#{tokenValue},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNcToken" parameterType="NcToken">
+        update nc_token
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tokenName != null">token_name = #{tokenName},</if>
+            <if test="tokenValue != null">token_value = #{tokenValue},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where token_id = #{tokenId}
+    </update>
+
+    <delete id="deleteNcTokenByTokenId" parameterType="Long">
+        delete from nc_token where token_id = #{tokenId}
+    </delete>
+
+    <delete id="deleteNcTokenByTokenIds" parameterType="String">
+        delete from nc_token where token_id in
+        <foreach item="tokenId" collection="array" open="(" separator="," close=")">
+            #{tokenId}
+        </foreach>
+    </delete>
+</mapper>

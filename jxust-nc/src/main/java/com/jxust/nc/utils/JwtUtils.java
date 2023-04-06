@@ -36,7 +36,7 @@ public class JwtUtils {
      *
      */
 
-    public static String createToken(Long uid)  {
+    public static String createToken(Long uid,String openid)  {
         try{
             Date iatDate = new Date();
             // expire time
@@ -55,6 +55,7 @@ public class JwtUtils {
                     .withClaim("iss", "Service") // payload
                     .withClaim("aud", "APP")
                     .withClaim("uid", uid)
+                    .withClaim("openid",openid)
 
                     .withIssuedAt(iatDate) // sign time
                     .withExpiresAt(expiresDate) // expire time
@@ -96,15 +97,48 @@ public class JwtUtils {
      * @return 用户账号phone
      */
     public static Long getUid(String token) {
-        Map<String, Claim> claims = verifyToken(token);
-        if (claims==null){
+        try {
+            Map<String, Claim> claims = verifyToken(token);
+            if (claims==null){
+                return null;
+            }
+            Claim user_id_claim = claims.get("uid");
+            if (null == user_id_claim || StringUtils.isEmpty(user_id_claim.asString())) {
+
+                // token 校验失败, 抛出Token验证非法异常
+            }
+            return user_id_claim.asLong();
+
+        }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
-        Claim user_id_claim = claims.get("uid");
-        if (null == user_id_claim || StringUtils.isEmpty(user_id_claim.asString())) {
-            // token 校验失败, 抛出Token验证非法异常
+
+    }
+    /**
+     * 根据Token获取openid
+     *
+     * @param token
+     * @return 用户openid
+     */
+    public static String getOpenId(String token) {
+        try {
+            Map<String, Claim> claims = verifyToken(token);
+            if (claims==null){
+                return null;
+            }
+            Claim openid_claim = claims.get("openid");
+            if (null == openid_claim || StringUtils.isEmpty(openid_claim.asString())) {
+
+                // token 校验失败, 抛出Token验证非法异常
+            }
+            return openid_claim.asString();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
         }
-        return user_id_claim.asLong();
+
     }
 
 }

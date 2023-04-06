@@ -2,6 +2,7 @@ package com.jxust.web.controller.nc.wx;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jxust.common.annotation.Log;
 import com.jxust.common.core.controller.BaseController;
 import com.jxust.common.core.domain.AjaxResult;
 import com.jxust.common.core.page.TableDataInfo;
@@ -10,9 +11,11 @@ import com.jxust.nc.domain.*;
 import com.jxust.nc.service.INcDiscussService;
 import com.jxust.nc.service.INcTopicService;
 import com.jxust.nc.service.INcTopicTypeService;
+import com.jxust.nc.service.ITencentService;
 import com.jxust.nc.utils.JwtUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -21,12 +24,17 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/wx/topic")
 public class WxTopicController extends BaseController {
+    @Value("${host}")
+    private String host;
+    @Autowired
+    private ITencentService tencentService;
     @Autowired
     private INcTopicTypeService ncTopicTypeService;
     @Autowired
     private INcTopicService ncTopicService;
     @Autowired
     private INcDiscussService ncDiscussService;
+
 
     @GetMapping("/type")
     public AjaxResult getTopicType(){
@@ -43,16 +51,23 @@ public class WxTopicController extends BaseController {
         String token = ServletUtils.getRequest().getHeader("token");
         if (token!=null){
             Long uid = JwtUtils.getUid(token);
-            NcTopic ncTopic = new NcTopic();
-            ncTopic.setTopicContent(content);
-            ncTopic.setTopicImages(images);
-            ncTopic.setTopicTypeId((long)typeId);
-            ncTopic.setCreateUid(uid);
-            int result = ncTopicService.insertNcTopic(ncTopic);
-            if(result==1){
-                return success("发布成功");
-            }else {
-                return error("发布失败");
+            String openid = JwtUtils.getOpenId(token);
+            if (uid!=null) {
+                if (openid!=null&&tencentService.checkText(content, openid, 3) != 100){
+                    return new AjaxResult(222, "内容包含敏感信息");
+                }
+                NcTopic ncTopic = new NcTopic();
+                ncTopic.setTopicContent(content);
+                ncTopic.setTopicImages(images);
+                ncTopic.setTopicTypeId((long) typeId);
+                ncTopic.setCreateUid(uid);
+                int result = ncTopicService.insertNcTopic(ncTopic);
+                if (result == 1) {
+                    return success("发布成功");
+                } else {
+                    return error("发布失败");
+                }
+
             }
 
 
@@ -152,14 +167,23 @@ public class WxTopicController extends BaseController {
         if (token!=null){
 
             Long uid = JwtUtils.getUid(token);
-            ncDiscuss.setCreateUid(uid);
+            String openid = JwtUtils.getOpenId(token);
+            if (uid!=null){
+                System.out.println(openid);
+                if (openid!=null&&tencentService.checkText(ncDiscuss.getDiscussContent(), openid, 3) != 100){
+                    return new AjaxResult(222, "内容包含敏感信息");
+                }
+                ncDiscuss.setCreateUid(uid);
+                int result = ncDiscussService.insertNcDiscuss(ncDiscuss);
+                if(result==1){
+                    return success("评论成功");
+                }else {
+                    return error("评论失败");
+                }
 
-            int result = ncDiscussService.insertNcDiscuss(ncDiscuss);
-            if(result==1){
-                return success("评论成功");
-            }else {
-                return error("评论失败");
+
             }
+
 
 
         }

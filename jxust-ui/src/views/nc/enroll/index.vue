@@ -142,7 +142,7 @@
       <el-table-column label="用户类别" align="center" prop="uType" />
       <el-table-column label="申请时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="申请状态" align="center" prop="status">

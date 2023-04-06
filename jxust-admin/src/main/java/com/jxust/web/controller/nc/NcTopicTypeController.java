@@ -39,7 +39,7 @@ public class NcTopicTypeController extends BaseController
     /**
      * 查询话题类别列表
      */
-    @PreAuthorize("@ss.hasPermi('cn:topicType:list')")
+    @PreAuthorize("@ss.hasPermi('nc:topicType:list')")
     @GetMapping("/list")
     public TableDataInfo list(NcTopicType ncTopicType)
     {
@@ -51,7 +51,7 @@ public class NcTopicTypeController extends BaseController
     /**
      * 导出话题类别列表
      */
-    @PreAuthorize("@ss.hasPermi('cn:topicType:export')")
+    @PreAuthorize("@ss.hasPermi('nc:topicType:export')")
     @Log(title = "话题类别", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, NcTopicType ncTopicType)
@@ -64,7 +64,7 @@ public class NcTopicTypeController extends BaseController
     /**
      * 获取话题类别详细信息
      */
-    @PreAuthorize("@ss.hasPermi('cn:topicType:query')")
+    @PreAuthorize("@ss.hasPermi('nc:topicType:query')")
     @GetMapping(value = "/{ttId}")
     public AjaxResult getInfo(@PathVariable("ttId") Long ttId)
     {
@@ -74,7 +74,7 @@ public class NcTopicTypeController extends BaseController
     /**
      * 新增话题类别
      */
-    @PreAuthorize("@ss.hasPermi('cn:topicType:add')")
+    @PreAuthorize("@ss.hasPermi('nc:topicType:add')")
     @Log(title = "话题类别", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody NcTopicType ncTopicType)
@@ -86,7 +86,7 @@ public class NcTopicTypeController extends BaseController
     /**
      * 修改话题类别
      */
-    @PreAuthorize("@ss.hasPermi('cn:topicType:edit')")
+    @PreAuthorize("@ss.hasPermi('nc:topicType:edit')")
     @Log(title = "话题类别", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody NcTopicType ncTopicType)
@@ -97,7 +97,7 @@ public class NcTopicTypeController extends BaseController
     /**
      * 删除话题类别
      */
-    @PreAuthorize("@ss.hasPermi('cn:topicType:remove')")
+    @PreAuthorize("@ss.hasPermi('nc:topicType:remove')")
     @Log(title = "话题类别", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ttIds}")
     public AjaxResult remove(@PathVariable Long[] ttIds)
