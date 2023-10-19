@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">江理软工双创管理系统</h3>
+      <h3 class="title">我爱我电小程序管理系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -72,7 +72,7 @@ export default {
     return {
       codeUrl: "",
       loginForm: {
-        username: "jxust",
+        username: "admin",
         password: "",
         rememberMe: false,
         code: "",

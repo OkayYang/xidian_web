@@ -1,8 +1,8 @@
 {
-  "name": "ruoyi",
+  "name": "ywenrou",
   "version": "3.8.5",
-  "description": "江理软工双创管理系统",
-  "author": "若依",
+  "description": "我爱我电管理系统",
+  "author": "xuxiaoyang",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
@@ -86,5 +86,6 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "main": ".eslintrc.js"
 }

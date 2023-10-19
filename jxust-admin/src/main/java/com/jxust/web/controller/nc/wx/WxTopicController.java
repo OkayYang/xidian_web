@@ -108,8 +108,12 @@ public class WxTopicController extends BaseController {
         String token = ServletUtils.getRequest().getHeader("token");
         if (token!=null){
             WxTopic wxTopic = new WxTopic();
-            wxTopic.setUid(JwtUtils.getUid(token));
-            return success(ncTopicService.selectWxTopicList(wxTopic));
+            Long uid = JwtUtils.getUid(token);
+            if (uid!=null){
+                wxTopic.setUid(uid);
+                return success(ncTopicService.selectWxTopicList(wxTopic));
+            }
+
 
         }
         return error("非法请求!");

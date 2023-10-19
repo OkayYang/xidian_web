@@ -26,7 +26,7 @@ public class WxFileController extends BaseController {
     private ITencentService tencentService;
     @PostMapping("/upload")
     @ResponseBody
-    public AjaxResult wxUploadFile(MultipartFile file) throws Exception
+    public AjaxResult wxUploadFile(MultipartFile file)
     {
         try
         {
@@ -35,22 +35,18 @@ public class WxFileController extends BaseController {
             // 上传并返回新文件名称
             String fileName = FileUploadUtils.upload(filePath, file);
             System.out.println(fileName);
-            if (fileName!=null){
-
-                return new AjaxResult(200,"上传成功",fileName);
-            }
-
-
+            return new AjaxResult(200, "上传成功", fileName);
         }
         catch (Exception e)
         {
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error(400,"上传失败");
+            //return AjaxResult.error(e.getMessage());
         }
-        return AjaxResult.error(400,"上传失败");
+
     }
     @PostMapping("/uploads")
     @ResponseBody
-    public AjaxResult wxUploadFiles(MultipartFile[] file) throws Exception
+    public AjaxResult wxUploadFiles(MultipartFile[] file)
     {
         try
         {
@@ -58,13 +54,13 @@ public class WxFileController extends BaseController {
             String filePath = RuoYiConfig.getUploadPath();
             List<String> fileNameList = new ArrayList<>();
             // 上传并返回新文件名称
-            for (int i = 0; i < file.length; i++) {
-                String fileName = FileUploadUtils.upload(filePath, file[i]);
+            for (MultipartFile multipartFile : file) {
+                String fileName = FileUploadUtils.upload(filePath, multipartFile);
                 fileNameList.add(fileName);
 
             }
 
-            if (fileNameList.size()>0){
+            if (!fileNameList.isEmpty()){
                 return new AjaxResult(200,"上传成功",fileNameList);
             }
 

@@ -3,7 +3,7 @@
 
     <el-row :gutter="20">
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
-        <h2 style="font-weight: bold">江西理工大学软工双创后台管理系统</h2>
+        <h2 style="font-weight: bold">我爱我电小程序管理系统</h2>
         <p>
           软工双创后台管理系统是一款专门为江西理工大学软件工程学院打造的管理平台。该系统集成了多种功能，包括文章发布、文章管理、用户管理、话题管理、发布比赛，到处参赛人员，旨在帮助用户更有效地管理和协作团队，提高项目的完成质量和效率。同时，该系统还支持多种权限设置，可以根据不同角色的需求，灵活地控制用户的访问权限和操作权限。此外，该系统还具备良好的用户体验，易于操作和上手，能够快速提升工作效率。        </p>
         <p>
@@ -16,14 +16,14 @@
             size="mini"
             icon="el-icon-cloudy"
             plain
-            @click="goTarget('https://github.com/PGone-AKA')"
+            @click="goTarget('https://github.com/xiaoyang-xxy')"
             >访问作者Github</el-button
           >
           <el-button
             size="mini"
             icon="el-icon-s-home"
             plain
-            @click="goTarget('https://jxust.ywenrou.cn')"
+            @click="goTarget('https://ywenrou.cn')"
             >访问主页</el-button
           >
         </p>
@@ -85,9 +85,9 @@
           <div class="body">
             <p>
               <i class="el-icon-s-promotion"></i> 官网：<el-link
-                href="https://jxust.ywenrou.cn"
+                href="https://xdu.ywenrou.cn"
                 target="_blank"
-                >https://jxust.ywenrou.cn</el-link
+                >https://xdu.ywenrou.cn</el-link
               >
             </p>
             <p>
@@ -125,7 +125,7 @@
           </div>
           <div class="body">
             <img
-              src="http://jxust.ywenrou.cn/prod-api/profile/upload/2023/04/05/contract_20230405101704A008.jpg"
+              src="https://cos.ywenrou.cn/blog/images20230923200512.png"
               alt="contract"
               width="100%"
             />
