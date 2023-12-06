@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '江理软工双创管理系统',
+      title: '我爱西电小程序后台管理系统',
       logo: logoImg
     }
   }

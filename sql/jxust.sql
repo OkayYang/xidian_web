@@ -1339,7 +1339,7 @@ CREATE TABLE `sys_notice`  (
 -- ----------------------------
 -- Records of sys_notice
 -- ----------------------------
-INSERT INTO `sys_notice` VALUES (10, '江理双创小程序上线啦，欢迎大家前来体验！', '1', 0x3C703E313C2F703E, '0', 'admin', '2023-03-28 21:42:54', 'jxust', '2023-04-05 22:09:04', NULL);
+INSERT INTO `sys_notice` VALUES (10, '我爱西电小程序后台管理系统上线啦，欢迎大家前来体验！', '1', 0x3C703E313C2F703E, '0', 'admin', '2023-03-28 21:42:54', 'jxust', '2023-04-05 22:09:04', NULL);
 
 -- ----------------------------
 -- Table structure for sys_oper_log

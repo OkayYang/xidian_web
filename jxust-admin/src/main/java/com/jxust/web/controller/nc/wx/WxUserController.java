@@ -102,7 +102,9 @@ public class WxUserController {
             String openId = tencentService.getUserOpenId(wxUserModel.getCode());
             if (openId != null) {
                 ncUser.setOpenid(openId);
-                List<NcUser> studentList = ncUserService.selectNcUserList(ncUser);
+                NcUser se_user = new NcUser();
+                se_user.setOpenid(ncUser.getOpenid());
+                List<NcUser> studentList = ncUserService.selectNcUserList(se_user);
                 int count = studentList.size();
                 System.out.println(studentList.size());
                 if (count == 0) {
