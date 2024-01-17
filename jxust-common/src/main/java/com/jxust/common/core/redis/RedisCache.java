@@ -36,6 +36,7 @@ public class RedisCache
         redisTemplate.opsForValue().set(key, value);
     }
 
+
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
@@ -107,6 +108,7 @@ public class RedisCache
         ValueOperations<String, T> operation = redisTemplate.opsForValue();
         return operation.get(key);
     }
+
 
     /**
      * 删除单个对象

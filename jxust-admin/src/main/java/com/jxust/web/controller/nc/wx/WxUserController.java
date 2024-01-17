@@ -19,11 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.jxust.common.core.domain.AjaxResult.error;
 import static com.jxust.common.core.domain.AjaxResult.success;
-
+import org.apache.http.cookie.Cookie;
 @RestController
 @RequestMapping("/wx/user")
 public class WxUserController {
@@ -90,14 +91,14 @@ public class WxUserController {
             wxUser.setNcUser(ncUser);
             wxUser.setToken("1111111111");
             wxUser.setKcb("1231313131231");
-            wxUser.setCookieStore(new BasicCookieStore());
+            wxUser.setCookies(new ArrayList<>());
             return success("登录成功", wxUser);
         }
-        CookieStore cookieStore = sysXduService.login(wxUserModel.getUsername(), wxUserModel.getPassword(), "");
-        System.out.println(cookieStore);
-        if (cookieStore!=null){
-            NcUser ncUser = sysXduService.getUserInfo(cookieStore);
-            String kcb = sysXduService.getXsckb(cookieStore,"20231");
+        List<Cookie> cookies = sysXduService.login(wxUserModel);
+        System.out.println(cookies);
+        if (cookies!=null){
+            NcUser ncUser = sysXduService.getUserInfo(cookies);
+            String kcb = sysXduService.getXsckb(cookies,"20231");
             String token = null;
             String openId = tencentService.getUserOpenId(wxUserModel.getCode());
             if (openId != null) {
@@ -126,7 +127,7 @@ public class WxUserController {
                 wxUser.setNcUser(ncUser);
                 wxUser.setToken(token);
                 wxUser.setKcb(kcb);
-                wxUser.setCookieStore(cookieStore);
+                wxUser.setCookies(cookies);
                 return success("登录成功", wxUser);
             }
         }else {

@@ -1,12 +1,15 @@
 package com.jxust.nc.domain;
 
 import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
+
+import java.util.List;
 
 public class WxUser {
     private NcUser ncUser;
     private String token;
 
-    private CookieStore cookieStore;
+    private List<Cookie> cookies;
     private String kcb;
 
     public String getKcb() {
@@ -17,12 +20,12 @@ public class WxUser {
         this.kcb = kcb;
     }
 
-    public CookieStore getCookieStore() {
-        return cookieStore;
+    public List<Cookie> getCookies() {
+        return cookies;
     }
 
-    public void setCookieStore(CookieStore cookieStore) {
-        this.cookieStore = cookieStore;
+    public void setCookies(List<Cookie> cookies) {
+        this.cookies = cookies;
     }
 
     public NcUser getNcUser() {

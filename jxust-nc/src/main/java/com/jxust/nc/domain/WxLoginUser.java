@@ -8,6 +8,51 @@ public class WxLoginUser {
     private String openId;
     private String username;
     private String password;
+    private String cookies;
+    private String ltValue ;
+    private String clltValue ;
+    private String dlltValue ;
+    private String exeValue ;
+
+    public String getLtValue() {
+        return ltValue;
+    }
+
+    public void setLtValue(String ltValue) {
+        this.ltValue = ltValue;
+    }
+
+    public String getClltValue() {
+        return clltValue;
+    }
+
+    public void setClltValue(String clltValue) {
+        this.clltValue = clltValue;
+    }
+
+    public String getDlltValue() {
+        return dlltValue;
+    }
+
+    public void setDlltValue(String dlltValue) {
+        this.dlltValue = dlltValue;
+    }
+
+    public String getExeValue() {
+        return exeValue;
+    }
+
+    public void setExeValue(String exeValue) {
+        this.exeValue = exeValue;
+    }
+
+    public String getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(String cookies) {
+        this.cookies = cookies;
+    }
 
     public String getUsername() {
         return username;

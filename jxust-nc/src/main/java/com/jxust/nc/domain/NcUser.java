@@ -78,6 +78,7 @@ public class NcUser extends BaseEntity
     /** wx小程序标识用户id */
     private String openid;
 
+
     public void setUid(Long uid) 
     {
         this.uid = uid;
